@@ -23,6 +23,7 @@ export class AppService {
       const old_price = $('span[class="price-label price-old"]', element).text()
       const new_price = $('span[class="price-inner game-price-new"]', element).text()
       const discount_percentage = $('span[class="discount label"]', element).text()
+      const expiry_date = $('span[class="expiry label"]', element).find("time").text()
 
       let image_url = $('a[class="main-image"]', element).find('img').attr("src")
       if (image_url.includes("data:")) {
@@ -36,6 +37,7 @@ export class AppService {
         old_price: old_price,
         new_price: new_price,
         discount_percentage: discount_percentage,
+        expiry_date: expiry_date,
         image_url: image_url.replace("154x72", "308x144"),
         discount_url: "https://gg.deals".concat(discount_url)
       })
