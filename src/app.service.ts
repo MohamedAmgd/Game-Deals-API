@@ -7,8 +7,11 @@ import { firstValueFrom } from 'rxjs';
 export class AppService {
   constructor(private readonly httpService: HttpService) { }
 
-  async getDeals() {
-    const deals_url = "https://gg.deals/deals/?minRating=1"
+  async getDeals(free?: boolean) {
+    let deals_url = "https://gg.deals/deals/?minRating=1"
+    if (free) {
+      deals_url = "https://gg.deals/deals/?maxPrice=0&minRating=1"
+    }
     const result = await firstValueFrom(this.httpService.get(deals_url))
     const $ = cheerio.load(result.data)
     const deals_container = $('div[id="deals-container"]')[0]
