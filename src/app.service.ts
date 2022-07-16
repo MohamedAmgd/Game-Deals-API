@@ -14,10 +14,10 @@ export class AppService {
     }
     const result = await firstValueFrom(this.httpService.get(deals_url))
     const $ = cheerio.load(result.data)
-    const deals_container = $('div[id="deals-container"]')[0]
-    const deals_list_container = $('div[class="list-items shadow-box-small-lighter"]', deals_container).children()
+    const deals_list_container = $('div[id="deals-list"]')
+    const deals_list = $('.list-items', deals_list_container).children()
     const deals = []
-    deals_list_container.each((index, element) => {
+    deals_list.each((_index, element) => {
 
       const name = $('div[class="game-info-title-wrapper"]', element).text()
       const old_price = $('span[class="price-label price-old"]', element).text()
@@ -26,7 +26,7 @@ export class AppService {
       const expiry_date = $('span[class="expiry label"]', element).find("time").text()
 
       let image_url = $('a[class="main-image"]', element).find('img').attr("src")
-      if (image_url.includes("data:")) {
+      if (image_url?.includes("data:")) {
         image_url = $('a[class="main-image"]', element).find('img').attr("data-src")
       }
 
@@ -38,7 +38,7 @@ export class AppService {
         new_price: new_price,
         discount_percentage: discount_percentage,
         expiry_date: expiry_date,
-        image_url: image_url.replace("154x72", "308x144"),
+        image_url: image_url?.replace("154x72", "308x144"),
         discount_url: "https://gg.deals".concat(discount_url)
       })
     })
