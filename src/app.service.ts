@@ -32,6 +32,8 @@ export class AppService {
 
       const discount_url = $('a[class="d-flex flex-align-center flex-justify-center label-with-arrows action-btn-full-box action-btn cta-label-desktop with-arrows action-ext"]', element)
         .attr('href')
+
+      const is_historical_low: boolean = $('span[class="historical label"]', element).text() == "Historical low"
       deals.push({
         name: name,
         old_price: old_price,
@@ -39,7 +41,8 @@ export class AppService {
         discount_percentage: discount_percentage,
         expiry_date: expiry_date,
         image_url: image_url?.replace("154x72", "308x144"),
-        discount_url: "https://gg.deals".concat(discount_url)
+        discount_url: "https://gg.deals".concat(discount_url),
+        is_historical_low: is_historical_low
       })
     })
     return deals
