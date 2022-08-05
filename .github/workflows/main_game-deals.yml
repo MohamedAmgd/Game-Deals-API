@@ -62,3 +62,12 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_30E9188FF0AD478590D9983DD2F030B0 }}
           package: .
+
+  delete-artifacts:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - uses: kolpav/purge-artifacts-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          expire-in: 0days
