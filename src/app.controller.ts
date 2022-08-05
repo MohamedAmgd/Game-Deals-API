@@ -1,4 +1,4 @@
-import { CacheInterceptor, Controller, Get, Optional, ParseBoolPipe, Query, UseInterceptors } from '@nestjs/common';
+import { CacheInterceptor, Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -7,7 +7,11 @@ export class AppController {
 
   @Get()
   @UseInterceptors(CacheInterceptor)
-  getDeals(@Query("free") free?: Boolean) {
-    return this.appService.getDeals(free?.valueOf());
+  getDeals(
+    @Query("free") free?: boolean,
+    @Query("page") page?: number,
+    @Query("title") title?: string
+  ) {
+    return this.appService.getDeals(free, page, title);
   }
 }

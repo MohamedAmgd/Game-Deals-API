@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as cheerio from 'cheerio';
 import { firstValueFrom } from 'rxjs';
 
@@ -7,12 +7,11 @@ import { firstValueFrom } from 'rxjs';
 export class AppService {
   constructor(private readonly httpService: HttpService) { }
 
-  async getDeals(free?: boolean) {
-    let deals_url = "https://gg.deals/deals/?minRating=1"
-    if (free) {
-      deals_url = "https://gg.deals/deals/?maxPrice=0&minRating=1"
-    }
-    const result = await firstValueFrom(this.httpService.get(deals_url))
+  async getDeals(free?: boolean, page?: number, title?: string) {
+    let deals_url = this.getDealsUrl(free, page, title)
+
+
+    const result = await firstValueFrom(this.httpService.get(deals_url)).catch(() => { throw new NotFoundException() })
     const $ = cheerio.load(result.data)
     const deals_list_container = $('div[id="deals-list"]')
     const deals_list = $('.list-items', deals_list_container).children()
@@ -46,5 +45,18 @@ export class AppService {
       })
     })
     return deals
+  }
+  getDealsUrl(free?: boolean, page?: number, title?: string): string {
+    let deals_url = "https://gg.deals/deals/?minRating=1"
+    if (free) {
+      deals_url = deals_url.concat("&maxPrice=0")
+    }
+    if (page) {
+      deals_url = deals_url.concat(`&page=${page}`)
+    }
+    if (title) {
+      deals_url = deals_url.concat(`&title=${title}`)
+    }
+    return deals_url
   }
 }
