@@ -16,6 +16,11 @@ export class AppService {
     const deals_list_container = $('div[id="deals-list"]')
     const deals_list = $('.list-items', deals_list_container).children()
     const deals = []
+    const no_results = deals_list_container
+      .find('div[class="d-flex flex-column wrap_items list emptyProvider"]').text() != ""
+    if (no_results) {
+      return deals;
+    }
     deals_list.each((_index, element) => {
 
       const name = $('div[class="game-info-title-wrapper"]', element).text()
