@@ -22,8 +22,9 @@
   },
   "dependencies": {
     "@nestjs/axios": "0.0.8",
-    "@nestjs/common": "^8.0.0",
-    "@nestjs/core": "^8.0.0",
+    "@nestjs/cache-manager": "^2.0.0",
+    "@nestjs/common": "^9.4.1",
+    "@nestjs/core": "^9.4.1",
     "@nestjs/platform-express": "^8.0.0",
     "cache-manager": "^4.1.0",
     "cheerio": "^1.0.0-rc.12",
@@ -32,7 +33,7 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@nestjs/cli": "^8.2.8",
+    "@nestjs/cli": "^9.3.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/cache-manager": "^4.0.2",
