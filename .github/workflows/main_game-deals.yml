@@ -60,7 +60,7 @@ jobs:
         with:
           app-name: 'game-deals'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_30E9188FF0AD478590D9983DD2F030B0 }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_919687269506459187b54b26819d4ee5 }}
           package: .
 
   delete-artifacts:
