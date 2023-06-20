@@ -12,7 +12,7 @@ import { AppService } from './app.service';
       },
       withCredentials: true
     }),
-    CacheModule.register({ ttl: 30 })
+    CacheModule.register({ ttl: 30 * 1000 })
   ],
   controllers: [AppController],
   providers: [AppService],
