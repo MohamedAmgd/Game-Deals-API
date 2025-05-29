@@ -14,7 +14,9 @@ export class AppService {
     const result = await firstValueFrom(this.httpService.get(deals_url)).catch((err) => {
 
       console.log(`Error fetching deals from ${deals_url} reason: ${err}`);
-
+      console.log(`Cookie Header:${this.httpService.axiosRef.defaults.headers.Cookie}`);
+      console.log(`Cookie Environment Variable: ${process.env.GG_DEALS_COOKIE}`);
+      
       throw new NotFoundException()
     })
     const $ = cheerio.load(result.data)
