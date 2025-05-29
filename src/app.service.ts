@@ -11,7 +11,12 @@ export class AppService {
     let deals_url = this.getDealsUrl(free, page, title)
 
 
-    const result = await firstValueFrom(this.httpService.get(deals_url)).catch(() => { throw new NotFoundException() })
+    const result = await firstValueFrom(this.httpService.get(deals_url)).catch((err) => {
+
+      console.log(`Error fetching deals from ${deals_url} reason: ${err}`);
+
+      throw new NotFoundException()
+    })
     const $ = cheerio.load(result.data)
     const deals_list_container = $('div[id="deals-list"]')
     const deals_list = $('.list-items', deals_list_container).children()
