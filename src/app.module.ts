@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as https from 'https';
 
 @Module({
   imports: [
@@ -15,13 +16,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
-
+        httpsAgent: new https.Agent({
+          host: '188.166.99.46',
+          port: 443,
+          servername: "gg.deals",
+        }),
         headers: {
           "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
           "accept-encoding": "gzip, deflate, br, zstd",
           "accept-language": "en-US,en;q=0.9,ar;q=0.8",
           "cache-control": "no-cache",
-          "Cookie": process.env.GG_DEALS_COOKIE || config.get<string>('GG_DEALS_COOKIE') || "",
+          // "Cookie": process.env.GG_DEALS_COOKIE || config.get<string>('GG_DEALS_COOKIE') || "",
           "pragma": "no-cache",
           "priority": "u=0, i",
           "referer": "https://gg.deals/deals/?minRating=1&maxPrice=0&__cf_chl_tk=LyePR8RkyCSSP.g_fq5nOH9WG8SJaAFDbTzg1B53c28-1748538712-1.0.1.1-Eublvuid94VTISPdXxe4QIjVa8ONs4KkHgq9wWbXyvc",
