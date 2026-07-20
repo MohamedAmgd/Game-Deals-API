@@ -14,17 +14,17 @@
   <a href="https://www.linkedin.com/in/mohamedamgd/">
     <img alt="Made by" src="https://img.shields.io/badge/made_by-Mohamed_Amgd-green">
   </a>
-  
+
   <img alt="Repository size" src="https://img.shields.io/github/repo-size/MohamedAmgd/Game-Deals-API">
-  
+
   <a href="https://github.com/MohamedAmgd/Game-Deals-API/commits/main">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/MohamedAmgd/Game-Deals-API">
   </a>
-  
+
   <a href="https://github.com/MohamedAmgd/Game-Deals-API/issues">
     <img alt="Repository issues" src="https://img.shields.io/github/issues/MohamedAmgd/Game-Deals-API">
   </a>
-  
+
   <img alt="GitHub" src="https://img.shields.io/github/license/MohamedAmgd/Game-Deals-API?cacheSeconds=0">
 </p>
 
@@ -46,6 +46,7 @@
 - Epic Games
 - GOG
   </ul>
+
 </p>
 
 ## 🚀 Technologies
@@ -79,6 +80,7 @@ $ node --version
 ```bash
 $ npm install
 ```
+
 #### Using yarn
 
 ```bash
@@ -99,6 +101,7 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
 #### Using yarn
 
 ```bash
@@ -111,6 +114,18 @@ $ yarn run start:dev
 # production mode
 $ yarn run start:prod
 ```
+
+## Deploying to Vercel
+
+Vercel detects `src/main.ts` as the NestJS entry point and deploys the API as a
+Node.js function. Import the repository into Vercel and deploy it with the
+default build settings; no output directory or route rewrites are required.
+
+The deployment uses Node.js 22. Use `GET /health` as a deployment health check.
+
+`APP_URL` is optional on Vercel because generated image links use the automatic
+`VERCEL_URL`. Set `APP_URL` in the Vercel project environment only when links
+should always use a custom domain, for example `https://api.example.com`.
 
 ## 🤔 How to contribute
 

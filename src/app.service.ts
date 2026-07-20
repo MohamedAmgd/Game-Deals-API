@@ -1,7 +1,11 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import * as cheerio from 'cheerio';
-import { buffer, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import * as https from 'https';
 
 @Injectable()
@@ -9,18 +13,11 @@ export class AppService {
   constructor(private readonly httpService: HttpService) {}
 
   async getDeals(free?: boolean, page?: number, title?: string) {
-    let deals_url = this.getDealsUrl(free, page, title);
+    const deals_url = this.getDealsUrl(free, page, title);
 
     const result = await firstValueFrom(this.httpService.get(deals_url)).catch(
       (err) => {
         console.log(`Error fetching deals from ${deals_url} reason: ${err}`);
-        console.log(
-          `Cookie Header:${this.httpService.axiosRef.defaults.headers.Cookie}`,
-        );
-        console.log(
-          `Cookie Environment Variable: ${process.env.GG_DEALS_COOKIE}`,
-        );
-
         throw new NotFoundException();
       },
     );
@@ -62,8 +59,11 @@ export class AppService {
           .attr('data-src');
       }
       const original_image_url = image_url?.replace('154x72', '308x144');
+      const vercelHost =
+        process.env.VERCEL_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL;
+      const vercelUrl = vercelHost ? `https://${vercelHost}` : undefined;
       const new_image_url = new URL(
-        process.env.APP_URL || 'http://localhost:3000',
+        process.env.APP_URL || vercelUrl || 'http://localhost:3000',
       );
       new_image_url.pathname = '/image';
       new_image_url.searchParams.set('url', original_image_url || '');
@@ -105,20 +105,42 @@ export class AppService {
   }
 
   async getImage(url: string) {
+    let imageUrl: URL;
+    try {
+      imageUrl = new URL(url);
+    } catch {
+      throw new BadRequestException('Invalid image URL');
+    }
+
+    if (
+      imageUrl.protocol !== 'https:' ||
+      imageUrl.hostname !== 'img.gg.deals'
+    ) {
+      throw new BadRequestException('Only img.gg.deals images are allowed');
+    }
+
     const imageRequestAgent = new https.Agent({
       host: '167.99.223.123',
       port: 443,
       servername: 'img.gg.deals',
     });
     const result = await firstValueFrom(
-      this.httpService.get(url, {
+      this.httpService.get(imageUrl.toString(), {
         responseType: 'arraybuffer',
         httpsAgent: imageRequestAgent,
+        maxContentLength: 10 * 1024 * 1024,
       }),
     ).catch((err) => {
       console.log(`Error fetching image from ${url} reason: ${err}`);
       throw new NotFoundException();
     });
-    return { buffer: result.data, contentType: result.headers['content-type'] };
+    const contentType = result.headers['content-type'];
+    return {
+      buffer: result.data,
+      contentType:
+        typeof contentType === 'string'
+          ? contentType
+          : 'application/octet-stream',
+    };
   }
 }

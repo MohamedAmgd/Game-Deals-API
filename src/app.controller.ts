@@ -7,6 +7,11 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get('health')
+  getHealth() {
+    return { status: 'ok' };
+  }
+
   @Get()
   @UseInterceptors(CacheInterceptor)
   getDeals(
@@ -21,7 +26,7 @@ export class AppController {
   @Get('image')
   async getImage(@Query('url') url: string, @Res() res: Response) {
     const image = await this.appService.getImage(url);
-    res.setHeader('Content-Type', image.contentType); // or the appropriate image content type
+    res.setHeader('Content-Type', image.contentType);
     res.send(image.buffer);
   }
 }
