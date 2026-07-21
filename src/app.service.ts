@@ -32,20 +32,22 @@ export class AppService {
     if (no_results) {
       return deals;
     }
+    const cleanText = (text?: string) =>
+      (text || '').replace(/\s+/g, ' ').trim();
     deals_list.each((_index, element) => {
-      const name = $('div[class="game-info-title-wrapper"]', element).text();
-      const old_price = $(
-        'span[class="price-label price-old"]',
-        element,
-      ).text();
-      const new_price = $(
-        'span[class="price-inner game-price-new"]',
-        element,
-      ).text();
-      const discount_percentage = $(
-        'span[class="discount label"]',
-        element,
-      ).text();
+      const dealPriceWrapper = $('.deal-price-wrapper', element).first();
+      const priceText = (selector: string) => {
+        const selected = dealPriceWrapper.find(selector).first().clone();
+        selected.find('.sr-only').remove();
+        return cleanText(selected.text());
+      };
+
+      const name =
+        cleanText($('.game-info-title.title', element).first().text()) ||
+        cleanText($('.game-info-title-wrapper', element).text());
+      const old_price = priceText('.base-price');
+      const new_price = priceText('.price');
+      const discount_percentage = priceText('.discount');
       const expiry_date = $('span[class="expiry label"]', element)
         .find('time')
         .text();
@@ -75,13 +77,14 @@ export class AppService {
       ).attr('href');
 
       const is_historical_low: boolean =
-        $('span[class="historical label"]', element).text() == 'Historical low';
+        cleanText($('span[class="historical label"]', element).text()) ==
+        'Historical low';
       deals.push({
         name: name,
         old_price: old_price,
         new_price: new_price,
         discount_percentage: discount_percentage,
-        expiry_date: expiry_date,
+        expiry_date: cleanText(expiry_date),
         image_url: image_url,
         original_image_url: original_image_url,
         discount_url: 'https://gg.deals'.concat(discount_url),
